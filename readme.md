@@ -1,4 +1,4 @@
-# Function Spy #
+# UnitTesting\FunctionSpy #
 
 Sometimes you want to unit test a global or native PHP method, especially when working with a package that has a bunch of globally defined functions (like Wordpress).
 

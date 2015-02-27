@@ -4,7 +4,7 @@
     "keywords": ["phpunit", "testing", "trait"],
     "license": "MIT",
     "authors": [],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
             "UnitTesting\\FunctionSpy\\": ""
