@@ -1,6 +1,6 @@
 <?php namespace UnitTesting\FunctionSpy;
 
-class Method {
+class Recorder {
 
 	protected $calls = array();
 

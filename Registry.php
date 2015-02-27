@@ -1,54 +1,76 @@
 <?php namespace UnitTesting\FunctionSpy;
+use ArrayAccess;
 
-class Registry {
-	protected $methods = array();
+class Registry implements ArrayAccess {
 
-	protected function resolveMethod($method)
+	protected $recorders = array();
+
+	public function getRecorders()
 	{
-		if (!$instance = $this->getSpiedMethod($method))
+		return $this->recorders;
+	}
+
+	public function getRecorder($method)
+	{
+		$result = null;
+		if (isset($this->recorders[$method]))
 		{
-			$this->methods[$method] = $instance = new Method();
+			$result = $this->recorders[$method];
+		}
+		return $result;
+	}
+
+	public function flushRecorders()
+	{
+		$this->recorders = array();
+	}
+
+	public function setFunctionResult($method, $result)
+	{
+		$instance = $this->resolveRecorder($method);
+		$instance->setResult($result);
+	}
+
+	protected function resolveRecorder($method)
+	{
+		if (!$instance = $this->getRecorder($method))
+		{
+			$this->recorders[$method] = $instance = new Recorder();
 		}
 		return $instance;
 	}
 
-	public function setMethodResult($method, $result)
+	protected function recordFunctionCall($method, array $args)
 	{
-		$instance = $this->resolveMethod($method);
-		$instance->setResult($result);
-	}
-
-	public function spyMethodCall($method, array $args)
-	{
-		$instance = $this->resolveMethod($method);
+		$instance = $this->resolveRecorder($method);
 
 		$instance->addCall($args);
 
 		return $instance->getResult();
 	}
 
-	public function getAllSpiedMethods()
-	{
-		return $this->methods;
-	}
-
-	public function getSpiedMethod($method)
-	{
-		$result = null;
-		if (isset($this->methods[$method]))
-		{
-			$result = $this->methods[$method];
-		}
-		return $result;
-	}
-
-	public function flushSpiedMethods()
-	{
-		$this->methods = array();
-	}
-
 	public function __call($method, array $args)
 	{
-		return $this->spyMethodCall($method, $args);
+		return $this->recordFunctionCall($method, $args);
+	}
+
+	public function offsetExists($key)
+	{
+		return $this->getRecorder($key) !== null;
+	}
+
+	public function offsetGet($key)
+	{
+		return $this->resolveRecorder($key);
+	}
+
+	public function offsetSet($key, $value)
+	{
+		$this->setFunctionresult($key, $value);
+	}
+
+	public function offsetUnset($key)
+	{
+		throw new \OverflowException('Cannot unset property');
 	}
 }

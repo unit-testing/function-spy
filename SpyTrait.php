@@ -16,12 +16,12 @@ trait SpyTrait {
 	*/
 	protected function flushSpy()
 	{
-		$this->spy->flushSpiedMethods();
+		$this->spy->flushRecorders();
 	}
 
-	protected function getMethodUnderTest($method)
+	protected function getFunctionUnderTest($method)
 	{
-		return $this->spy->getSpiedMethod($method);
+		return $this->spy->getRecorder($method);
 	}
 
 	/**
@@ -35,7 +35,7 @@ trait SpyTrait {
 			throw new \InvalidArgumentException('@assertFunctionNotCalled() expects only a method parameter. Did you mean to use @assertFunctionNotCalledWith()?');
 		}
 
-		if ($method = $this->getMethodUnderTest($name) and $method->wasCalled())
+		if ($method = $this->getFunctionUnderTest($name) and $method->wasCalled())
 		{
 			$message = 'Expected [' . $name . '] not to be called, but it was called.';
 			$this->fail($message);
@@ -48,7 +48,7 @@ trait SpyTrait {
 	*/
 	public function assertFunctionNotCalledWith($name, array $args)
 	{
-		if ($method = $this->getMethodUnderTest($name) and $method->wasCalledWith($args))
+		if ($method = $this->getFunctionUnderTest($name) and $method->wasCalledWith($args))
 		{
 			$message = 'Expected [' . $name . '] not to be called with [' . join($args, ', ') . '].';
 			$this->fail($message);
@@ -62,7 +62,7 @@ trait SpyTrait {
 	*/
 	public function assertFunctionCalledWith($name, array $args)
 	{
-		if (!$method = $this->getMethodUnderTest($name) or !$method->wasCalledWith($args))
+		if (!$method = $this->getFunctionUnderTest($name) or !$method->wasCalledWith($args))
 		{
 			$message = 'Expected [' . $name . '] to be called with [' . join($args, ', ') . '].';
 			$this->fail($message);
@@ -77,7 +77,7 @@ trait SpyTrait {
 	public function assertFunctionLastCalledWith($name, array $args)
 	{
 		$message = null;
-		if (!$method = $this->getMethodUnderTest($name))
+		if (!$method = $this->getFunctionUnderTest($name))
 		{
 			$message = 'Expected [' . $name . '] to be called, but it was never called.';
 		}
