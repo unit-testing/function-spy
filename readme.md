@@ -6,8 +6,8 @@ Inspiration was taken from javascript testing module: https://github.com/jasmine
 
 ## Installation ##
 
-* `composer require --dev unit-testing/function-spy`
-* Or, require the module in your `composer.json` like this: `"require-dev": { "unit-testing/function-spy": "*" }` and run `composer update`
+* `composer require --dev unit-testing/function-spy:dev-master`
+* Or, require the module in your `composer.json` like this: `"require-dev": { "unit-testing/function-spy": "dev-master" }` and run `composer update`
 
 ### Spy ###
 
